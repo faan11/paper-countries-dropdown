@@ -289,6 +289,11 @@ If you want to save it in bower.json file, remember to add flag --save
           notify: true,
           observer: '_countryChange',
         },
+
+        countryLimit: {
+          type: Array,
+          notify: true
+        },
         /**
          * The prefetched candidates hold all countries
          */
@@ -506,10 +511,19 @@ If you want to save it in bower.json file, remember to add flag --save
         query = query.replace("+", "\\+");
         const pattern = new RegExp(query.toLowerCase());
         const matched = [];
+        var i = 0;
         this._prefetchedCandidates.forEach((country) => {
           if (matched.length < this.maxSuggestions) {
+            
+            if (this.countryLimit !== undefined){
+              if (this.countryLimit.indexOf(countries[i].code) !== -1){
+                continue; // Just avoid.
+              }
+            }
+
             if (pattern.test(country.fullName.toLowerCase())) {
               matched.push(country);
+
             }
           }
         });
